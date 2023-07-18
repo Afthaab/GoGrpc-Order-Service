@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+package order;
+
+option go_package = "./pkg/pb";
+
+service OrderManagement {
+    rpc SaveCartItems(CartItemsSaveRequest) returns (CartItemsSaveResponse) {}
+    rpc CashOnDelivery(CashOnDeliveryRequest) returns (CashOnDeliveryResponse) {}
+    rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse) {}
+    rpc OrderDispacth(OrderDispacthRequest) returns (OrderDispacthResponse) {}
+    rpc OrderCancel (OrderCancelRequest) returns (OrderCancelResponse) {}
+    rpc AdminViewAllOrders (AdminViewAllOrdersRequest) returns (AdminViewAllOrdersResponse) {}
+    rpc ViewOrderById (ViewOrderByIdRequest) returns (ViewOrderByIdResponse) {}
+}
+
+message ViewOrderByIdRequest{
+    string id = 1;
+}
+
+message ViewOrderByIdResponse{
+    int64 status = 1;
+    string error = 2;
+    OrderViewDetails orderdetails = 3;
+    CashOnDeliveryRequest paymentdetails = 4;
+    repeated CartItems items = 5;
+}
+
+message AdminViewAllOrdersRequest{
+}
+
+message AdminViewAllOrdersResponse{
+    int64 status = 1;
+    string error = 2;
+    repeated OrderViewDetails orderdetails = 3;
+}
+
+message OrderViewDetails{
+    string Orderid = 1;
+    string Orderstatus = 2;
+    string Orderddatae = 3;
+    string Orderdtime = 4;
+    string Updatedtime = 5;
+}
+
+message OrderCancelRequest{
+    string orderid = 1;
+}
+
+message OrderCancelResponse{
+    int64 status = 1;
+    string error = 2;
+}
+
+message OrderDispacthRequest{
+    string orderid = 1;
+}
+
+message OrderDispacthResponse{
+    int64 status = 1;
+    string error = 2;
+}
+
+message CreateOrderRequest{
+    int64 userid = 1;
+    int64 paymentid = 2;
+    int64 addressid = 3;
+    string orderstatus = 4;
+}
+
+message CreateOrderResponse{
+    int64 status = 1;
+    string error = 2;
+    string orderid = 3;
+}
+
+message CashOnDeliveryRequest{
+    float totalamount = 1;
+    string paymentmode = 2;
+    string paymentstatus = 3;
+    int64 userid = 4;
+    string coupondid = 5;
+}
+
+message CashOnDeliveryResponse{
+    int64 status = 1;
+    string error = 2;
+    int64 paymentid =3;
+}
+
+message CartItemsSaveRequest{
+    string orderid = 1;
+    repeated CartItems items = 2;
+}
+
+message CartItems{
+    int64 uid = 1;
+    string pid = 2;
+    string productname = 3;
+    string sizename = 4;
+    float price = 5;
+    string imagelink = 6;
+    int64 Quantity = 7;
+}
+
+message CartItemsSaveResponse{
+    int64 status = 1;
+    string error = 2;
+}
+
+
+// export PATH="$PATH:$(go env GOPATH)/bin"
+// protoc --go_out=. --go-grpc_out=. pkg/pb/order.proto
